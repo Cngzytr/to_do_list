@@ -13,22 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::redirect('/', 'tr');
-
 Route::namespace('App\Http\Controllers')->prefix('')->group(function () {
-
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware(['auth'])->name('dashboard');
     
     require __DIR__.'/auth.php';
 
-    Route::group(['prefix' => '{language}'], function () {
-
-        Route::get('/', function () {
-            return view('home.index');
-        });
+    Route::group(['prefix' => '/'], function () {
+        Route::get('', 'ToDoListController@index')->middleware(['auth'])->name('todo.index');
+        Route::post('save', 'ToDoListController@save')->middleware('auth')->name('todo.save');
+        Route::post('edit', 'ToDoListController@edit')->middleware('auth')->name('todo.edit');
+        Route::get('active/{id}', 'ToDoListController@active')->middleware('auth')->name('todo.active');
+        Route::get('delete/{id}', 'ToDoListController@delete')->middleware('auth')->name('todo.delete');
+        Route::get('logs', 'ToDoListController@logs')->middleware('auth')->name('todo.logs');
     });
+
 });
 
 
